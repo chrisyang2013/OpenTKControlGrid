@@ -25,20 +25,19 @@ namespace OpenTKControlGrid
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <param name="lineThickness"></param>
-        public void Line(Vector3 p1, Vector3 p2, float lineThickness = 1)
+        public void Line3D(Vector3 p1, Vector3 p2)
         {
-            GL.LineWidth(lineThickness);
             GL.Begin(PrimitiveType.Lines);
             GL.Vertex3(p1);
             GL.Vertex3(p2);
             GL.End();
         }
         [Obsolete("Draw.Line(new Vector3(x1, y1, z1), new Vector3(x2, y2, z2), lineThickness)")]
-        public void Line(float x1, float y1, float z1, float x2, float y2, float z2, float lineThickness = 1)
+        public void Line3D(float x1, float y1, float z1, float x2, float y2, float z2, float lineThickness = 1)
         {
             Vector3 v1 = new Vector3(x1, x2, z1);
             Vector3 v2 = new Vector3(x1, x2, z2);
-            Line(v1, v2, lineThickness);
+            Line3D(v1, v2);
         }
         //2D
         /// <summary>
@@ -48,11 +47,11 @@ namespace OpenTKControlGrid
         /// <param name="p2"></param>
         /// <param name="z"></param>
         /// <param name="lineThickness"></param>
-        public void Line(Vector2 p1, Vector2 p2, float z = 0, float lineThickness = 1)
+        public void Line(Vector2 p1, Vector2 p2, float z = 0)
         {
             Vector3 v1 = new Vector3(p1.X, p1.Y, z);
             Vector3 v2 = new Vector3(p2.X, p2.Y, z);
-            this.Line(v1, v2, lineThickness);
+            this.Line3D(v1, v2);
         }
         //2D assumes z = 0
         /// <summary>
@@ -65,11 +64,11 @@ namespace OpenTKControlGrid
         /// <param name="y2"></param>
         /// <param name="z"></param>
         /// <param name="lineThickness"></param>
-        public void Line(float x1, float y1, float x2, float y2, float lineThickness = 1)
+        public void Line(float x1, float y1, float x2, float y2)
         {
             Vector3 v1 = new Vector3(x1, y1, 0);
             Vector3 v2 = new Vector3(x2, y2, 0);
-            this.Line(v1, v2, lineThickness);
+            this.Line3D(v1, v2);
         }
         /// <summary>
         /// sets the linewidth until furthur updated
@@ -83,14 +82,20 @@ namespace OpenTKControlGrid
         #endregion
 
         #region Rectrangle
-        public void Rectangle3D(Vector3 lowerLeft, Vector3 upperRight, float zplane = 0, float lineThickness = 1)
+        /// <summary>
+        /// Draws a rectangle in 3 dimensional space
+        /// </summary>
+        /// <param name="lowerLeft"></param>
+        /// <param name="upperRight"></param>
+        /// <param name="zplane"></param>
+        public void Rectangle3D(Vector3 lowerLeft, Vector3 upperRight, float zplane = 0)
         {
             Vector3 upperleft = new Vector3(lowerLeft.X, upperRight.Y, zplane);
             Vector3 lowerRight = new Vector3(upperRight.X, lowerLeft.Y, zplane);
-            this.Line(lowerLeft, upperleft, lineThickness);
-            this.Line(upperleft, upperRight, lineThickness);
-            this.Line(upperRight, lowerRight, lineThickness);
-            this.Line(lowerRight, lowerLeft, lineThickness);
+            this.Line3D(lowerLeft, upperleft);
+            this.Line3D(upperleft, upperRight);
+            this.Line3D(upperRight, lowerRight);
+            this.Line3D(lowerRight, lowerLeft);
         }
         /// <summary>
         /// Draws a rectangle, assumes z = 0
@@ -103,7 +108,7 @@ namespace OpenTKControlGrid
         {
             Vector3 v1 = new Vector3(lowerLeft.X, lowerLeft.Y, 0);
             Vector3 v2 = new Vector3(upperRight.X, upperRight.Y, 0);
-            this.Rectangle3D(v1, v2, 0, lineThickness);
+            this.Rectangle3D(v1, v2, 0);
         }
         public void FilledRectangle2(Vector2 lowerLeft, Vector2 upperRight)
         {

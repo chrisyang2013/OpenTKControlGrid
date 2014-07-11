@@ -143,16 +143,17 @@ namespace OpenTKControlGrid
             //x-axis
             //GL.Vertex3(0, viewSize.Y / 2, .1);
             //GL.Vertex3(viewSize.X, viewSize.Y / 2, .1);
-            Draw.Line(0, viewSize.Y / 2, viewSize.X, viewSize.Y / 2, thickLine);
+            Draw.setLineWidth(thickLine);
+            Draw.Line(0, viewSize.Y / 2, viewSize.X, viewSize.Y / 2);
             //y-axis
             //GL.Vertex3(viewSize.X / 2, 0, .1);
             //GL.Vertex3(viewSize.X / 2, viewSize.Y, .1);
-            Draw.Line(viewSize.X / 2, 0, viewSize.X / 2, viewSize.Y, thickLine);
+            Draw.Line(viewSize.X / 2, 0, viewSize.X / 2, viewSize.Y);
             //z-axis (cannot see in orthographic projection)
             //GL.Vertex3(50, upperRight.Y + 10, 0);
             //GL.Vertex3(50, upperRight.Y + 10, 10);
-            Draw.Line(new Vector3(viewSize.X / 2, viewSize.Y / 2, -50),
-                      new Vector3(viewSize.X / 2, viewSize.Y / 2, 50), thickLine);
+            Draw.Line3D(new Vector3(viewSize.X / 2, viewSize.Y / 2, -50),
+                      new Vector3(viewSize.X / 2, viewSize.Y / 2, 50) );
 
             //test functions
             //Draw.FilledCircle(100, viewSize.X / 2, viewSize.Y / 2);
@@ -181,9 +182,15 @@ namespace OpenTKControlGrid
                 {
                     float y = (spacing * i) + (spacing / 10 * j) + v1.Y;
                     if (j == 0 || j == 10)
-                        Draw.Line(v1.X, y, v2.X, y, thickLine);
+                    {
+                        Draw.setLineWidth(thickLine);
+                        Draw.Line(v1.X, y, v2.X, y);
+                    }
                     else
-                        Draw.Line(v1.X, y, v2.X, y, thinLine);
+                    {
+                        Draw.setLineWidth(thinLine);
+                        Draw.Line(v1.X, y, v2.X, y);
+                    }
                 }
             }
 
@@ -195,9 +202,15 @@ namespace OpenTKControlGrid
                 {
                     float x = (spacing * i) + (spacing / 10 * j) + v1.X;
                     if (j == 0 || j == 10)
-                        Draw.Line(x, v1.Y, x, v2.Y, lineThickness: thickLine);
+                    {
+                        Draw.setLineWidth(thickLine);
+                        Draw.Line(x, v1.Y, x, v2.Y);
+                    }
                     else
-                        Draw.Line(x, v1.Y, x, v2.Y, lineThickness: thinLine);
+                    {
+                        Draw.setLineWidth(thinLine);
+                        Draw.Line(x, v1.Y, x, v2.Y); 
+                    }
                 }
             }
         }
