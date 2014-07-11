@@ -124,6 +124,7 @@ namespace OpenTKControlGrid
         #endregion
 
         #region Circle
+        const float DEG2RAD = (float)Math.PI / 180f;
         /// <summary>
         /// Draws a circle
         /// </summary>
@@ -132,9 +133,7 @@ namespace OpenTKControlGrid
         /// <param name="y">y coordinate of the center</param>
         public void Circle(float radius, float x, float y)
         {
-            const float DEG2RAD = (float)Math.PI / 180f;
             GL.Begin(PrimitiveType.LineLoop);
-            
             //circles has 360 segments
             for (int i = 0; i <= 360; i++)
             {
@@ -143,9 +142,19 @@ namespace OpenTKControlGrid
             }
             GL.End();
         }
+        public void Arc(float radius, float x, float y, float startangle, float endangle)
+        {
+            GL.Begin(PrimitiveType.LineLoop);
+            //circles has 360 segments
+            for (float i = startangle; i <= endangle; i++)
+            {
+                float degInRad = i * DEG2RAD;
+                GL.Vertex2(x + Math.Cos(degInRad) * radius, y + Math.Sin(degInRad) * radius);
+            }
+            GL.End();
+        }
         public void FilledCircle(float radius, float x, float y)
         {
-            const float DEG2RAD = (float)Math.PI / 180f;
             GL.Begin(PrimitiveType.TriangleFan);
             GL.Vertex2(x, y);
             for (int i = 0; i <= 360; i++)
@@ -157,7 +166,6 @@ namespace OpenTKControlGrid
         }
         public void FillWedge(float radius, float x, float y, float startangle, float endangle)
         {
-            const float DEG2RAD = (float)Math.PI / 180f;
             GL.Begin(PrimitiveType.TriangleFan);
             GL.Vertex2(x, y);
             for (float i = startangle; i <= endangle; i++)

@@ -160,7 +160,7 @@ namespace OpenTKControlGrid
             //Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
             //    new Vector2(viewSize.X / 2 + 100, viewSize.Y / 2 + 100));
             //Draw.FillWedge(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
-
+            Draw.Arc(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
 
 
         }
