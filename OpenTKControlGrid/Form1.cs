@@ -15,13 +15,17 @@ namespace OpenTKControlGrid
 {
     public partial class Form1 : Form
     {
+
+        #region Global Variables
         //static readonly int dpi = 96;
-        Draw Draw = new Draw();
-        Vector2 bottomLeft = new Vector2(50, 50);
-        Vector2 upperRight = new Vector2(1650, 1050);
-        Vector2 viewSize = new Vector2(1700, 1100);
+        static readonly Vector2 bottomLeft = new Vector2(50, 50);
+        static readonly Vector2 upperRight = new Vector2(1650, 1050);
+        static readonly Vector2 viewSize = new Vector2(1700, 1100);
         private const float thickLine = 2f;
         private const float thinLine = 1f;
+        #endregion
+
+        #region Initialization
         public Form1()
         {
             InitializeComponent();
@@ -37,14 +41,15 @@ namespace OpenTKControlGrid
             setupViewPort();
             loaded = true;
         }
-
+        private void glControl1_Resize(object sender, EventArgs e)
+        {
+            setupViewPort();
+            glControl1.Invalidate();
+        }
         private void InitializeMyGLControl()
         {
             glControl1.Size = new Size((int)viewSize.X, (int)viewSize.Y);
-            //glControl1.Width = this.Width - 50;
-            //glControl1.Height = this.Height - 50;
         }
-
         private void setupViewPort()
         {
             int w = (int)viewSize.X;
@@ -59,17 +64,14 @@ namespace OpenTKControlGrid
             GL.Ortho(0, w, 0, h, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
             GL.Viewport(0, 0, w, h);
         }
+        #endregion
 
-        private void glControl1_Resize(object sender, EventArgs e)
-        {
-            setupViewPort();
-            glControl1.Invalidate();
-        }
-
+        #region Draw
         float zoom = 1f;
         float dzoom = .025f;
         float transx = 0;
         float transy = 0;
+        float z = 0;
         private void glControl1_Paint(object sender, PaintEventArgs e)
         {
             //check if loaded
@@ -136,7 +138,6 @@ namespace OpenTKControlGrid
             glControl1.SwapBuffers();
         }
 
-        float z = 0f;
         private void drawAxes()
         {
             GL.Color3(Color.Blue);
@@ -166,18 +167,19 @@ namespace OpenTKControlGrid
         }
         private void drawViewPort()
         {
-            GL.Color3(Color.Black);
-            Vector2 leftCornerViewport = new Vector2(0, 0);
-            Draw.Rectangle(leftCornerViewport, viewSize, thickLine);
+            Draw.setColor(Color.Black);
+            Draw.setLineWidth(thickLine);
+            Draw.Rectangle(new Vector2(0, 0), viewSize);
         }
         private void drawPageOutline()
         {
-            GL.Color3(Color.Black);
-            Draw.Rectangle(bottomLeft, upperRight, thickLine);
+            Draw.setColor(Color.Black);
+            Draw.setLineWidth(thickLine);
+            Draw.Rectangle(bottomLeft, upperRight);
         }
         private void drawGrid(Vector2 v1, Vector2 v2, int spacing)
         {
-            GL.Color3(Color.Black);
+            Draw.setColor(Color.Black);
             //plot horizontal lines
             int nHLines = (int)(v2.Y - v1.Y) / spacing;
             for (int i = 0; i < nHLines; i++)
@@ -186,15 +188,10 @@ namespace OpenTKControlGrid
                 {
                     float y = (spacing * i) + (spacing / 10 * j) + v1.Y;
                     if (j == 0 || j == 10)
-                    {
                         Draw.setLineWidth(thickLine);
-                        Draw.Line(v1.X, y, v2.X, y);
-                    }
                     else
-                    {
                         Draw.setLineWidth(thinLine);
-                        Draw.Line(v1.X, y, v2.X, y);
-                    }
+                    Draw.Line(v1.X, y, v2.X, y);
                 }
             }
 
@@ -206,25 +203,14 @@ namespace OpenTKControlGrid
                 {
                     float x = (spacing * i) + (spacing / 10 * j) + v1.X;
                     if (j == 0 || j == 10)
-                    {
                         Draw.setLineWidth(thickLine);
-                        Draw.Line(x, v1.Y, x, v2.Y);
-                    }
                     else
-                    {
                         Draw.setLineWidth(thinLine);
-                        Draw.Line(x, v1.Y, x, v2.Y); 
-                    }
+                    Draw.Line(x, v1.Y, x, v2.Y);
                 }
             }
         }
-
-        //brings the scrollbars to front
-        private void Form1_Layout(object sender, LayoutEventArgs e)
-        {
-            hScrollBar1.BringToFront();
-            vScrollBar1.BringToFront();
-        }
+        #endregion
 
         #region scrollbars
         HScrollBar hScrollBar1 = new HScrollBar();
@@ -323,6 +309,12 @@ namespace OpenTKControlGrid
             glControl1.Invalidate();
         }
 
+        //brings the scrollbars to front
+        private void Form1_Layout(object sender, LayoutEventArgs e)
+        {
+            hScrollBar1.BringToFront();
+            vScrollBar1.BringToFront();
+        }
         #endregion
 
         #region buttons
