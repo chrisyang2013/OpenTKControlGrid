@@ -153,12 +153,16 @@ namespace OpenTKControlGrid
             //GL.Vertex3(50, upperRight.Y + 10, 0);
             //GL.Vertex3(50, upperRight.Y + 10, 10);
             Draw.Line3D(new Vector3(viewSize.X / 2, viewSize.Y / 2, -50),
-                      new Vector3(viewSize.X / 2, viewSize.Y / 2, 50) );
+                        new Vector3(viewSize.X / 2, viewSize.Y / 2, 50));
 
             //test functions
             //Draw.FilledCircle(100, viewSize.X / 2, viewSize.Y / 2);
             //Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
             //    new Vector2(viewSize.X / 2 + 100, viewSize.Y / 2 + 100));
+            //Draw.FillWedge(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
+
+
+
         }
         private void drawViewPort()
         {

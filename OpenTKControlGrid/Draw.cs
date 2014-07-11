@@ -155,6 +155,18 @@ namespace OpenTKControlGrid
             }
             GL.End();
         }
+        public void FillWedge(float radius, float x, float y, float startangle, float endangle)
+        {
+            const float DEG2RAD = (float)Math.PI / 180f;
+            GL.Begin(PrimitiveType.TriangleFan);
+            GL.Vertex2(x, y);
+            for (float i = startangle; i <= endangle; i++)
+            {
+                float degInRad = i * DEG2RAD;
+                GL.Vertex2(x + Math.Cos(degInRad) * radius, y + Math.Sin(degInRad) * radius);
+            }
+            GL.End();
+        }
         #endregion
 
         
