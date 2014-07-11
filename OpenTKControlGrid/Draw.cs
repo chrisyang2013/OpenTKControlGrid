@@ -71,11 +71,19 @@ namespace OpenTKControlGrid
             Vector3 v2 = new Vector3(x2, y2, 0);
             this.Line(v1, v2, lineThickness);
         }
+        /// <summary>
+        /// sets the linewidth until furthur updated
+        /// </summary>
+        /// <param name="width"></param>
+        public void setLineWidth(float width)
+        {
+            GL.LineWidth(width);
+        }
 
         #endregion
 
         #region Rectrangle
-        public void Rectangle(Vector3 lowerLeft, Vector3 upperRight, float zplane = 0, float lineThickness = 1)
+        public void Rectangle3D(Vector3 lowerLeft, Vector3 upperRight, float zplane = 0, float lineThickness = 1)
         {
             Vector3 upperleft = new Vector3(lowerLeft.X, upperRight.Y, zplane);
             Vector3 lowerRight = new Vector3(upperRight.X, lowerLeft.Y, zplane);
@@ -84,13 +92,30 @@ namespace OpenTKControlGrid
             this.Line(upperRight, lowerRight, lineThickness);
             this.Line(lowerRight, lowerLeft, lineThickness);
         }
-        public void Rectangle(Vector2 lowerLeft, Vector2 upperRight, float z = 0, float lineThickness = 1)
+        /// <summary>
+        /// Draws a rectangle, assumes z = 0
+        /// </summary>
+        /// <param name="lowerLeft"></param>
+        /// <param name="upperRight"></param>
+        /// <param name="z"></param>
+        /// <param name="lineThickness"></param>
+        public void Rectangle(Vector2 lowerLeft, Vector2 upperRight, float lineThickness = 1)
         {
-            Vector3 v1 = new Vector3(lowerLeft.X, lowerLeft.Y, z);
-            Vector3 v2 = new Vector3(upperRight.X, upperRight.Y, z);
-            this.Rectangle(v1, v2, z, lineThickness);
+            Vector3 v1 = new Vector3(lowerLeft.X, lowerLeft.Y, 0);
+            Vector3 v2 = new Vector3(upperRight.X, upperRight.Y, 0);
+            this.Rectangle3D(v1, v2, 0, lineThickness);
         }
-
+        public void FilledRectangle2(Vector2 lowerLeft, Vector2 upperRight)
+        {
+            Vector2 upperLeft = new Vector2(lowerLeft.X, upperRight.Y);
+            Vector2 lowerRight = new Vector2(upperRight.X, lowerLeft.Y);
+            GL.Begin(PrimitiveType.Quads);
+            GL.Vertex2(lowerLeft);
+            GL.Vertex2(upperLeft);
+            GL.Vertex2(upperRight);
+            GL.Vertex2(lowerRight);
+            GL.End();
+        }
         #endregion
 
         #region Circle
@@ -106,7 +131,19 @@ namespace OpenTKControlGrid
             GL.Begin(PrimitiveType.LineLoop);
             
             //circles has 360 segments
-            for (int i = 0; i < 360; i++)
+            for (int i = 0; i <= 360; i++)
+            {
+                float degInRad = i * DEG2RAD;
+                GL.Vertex2(x + Math.Cos(degInRad) * radius, y + Math.Sin(degInRad) * radius);
+            }
+            GL.End();
+        }
+        public void FilledCircle(float radius, float x, float y)
+        {
+            const float DEG2RAD = (float)Math.PI / 180f;
+            GL.Begin(PrimitiveType.TriangleFan);
+            GL.Vertex2(x, y);
+            for (int i = 0; i <= 360; i++)
             {
                 float degInRad = i * DEG2RAD;
                 GL.Vertex2(x + Math.Cos(degInRad) * radius, y + Math.Sin(degInRad) * radius);
@@ -114,6 +151,9 @@ namespace OpenTKControlGrid
             GL.End();
         }
         #endregion
+
+        
+        
 
     }
 }

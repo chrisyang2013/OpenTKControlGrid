@@ -110,7 +110,7 @@ namespace OpenTKControlGrid
                 drawViewPort();
             if (((ToolStripMenuItem)glControl1.ContextMenuStrip.Items[1]).Checked)
                 drawAxes();
-                if (((ToolStripMenuItem)glControl1.ContextMenuStrip.Items[2]).Checked)
+            if (((ToolStripMenuItem)glControl1.ContextMenuStrip.Items[2]).Checked)
                 drawPageOutline();
             if (((ToolStripMenuItem)glControl1.ContextMenuStrip.Items[3]).Checked)
             {
@@ -154,19 +154,21 @@ namespace OpenTKControlGrid
             Draw.Line(new Vector3(viewSize.X / 2, viewSize.Y / 2, -50),
                       new Vector3(viewSize.X / 2, viewSize.Y / 2, 50), thickLine);
 
-            //test circle function
-            Draw.Circle(100, viewSize.X / 2, viewSize.Y / 2);
+            //test functions
+            //Draw.FilledCircle(100, viewSize.X / 2, viewSize.Y / 2);
+            //Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
+            //    new Vector2(viewSize.X / 2 + 100, viewSize.Y / 2 + 100));
         }
         private void drawViewPort()
         {
             GL.Color3(Color.Black);
             Vector2 leftCornerViewport = new Vector2(0, 0);
-            Draw.Rectangle(leftCornerViewport, viewSize, z, thickLine);
+            Draw.Rectangle(leftCornerViewport, viewSize, thickLine);
         }
         private void drawPageOutline()
         {
             GL.Color3(Color.Black);
-            Draw.Rectangle(bottomLeft, upperRight, z, thickLine);
+            Draw.Rectangle(bottomLeft, upperRight, thickLine);
         }
         private void drawGrid(Vector2 v1, Vector2 v2, int spacing)
         {
