@@ -58,8 +58,6 @@ namespace OpenTKControlGrid
             //GL.Viewport(-w / 2, -h / 2, w, h);
             GL.Ortho(0, w, 0, h, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
             GL.Viewport(0, 0, w, h);
-
-            
         }
 
         private void glControl1_Resize(object sender, EventArgs e)
@@ -145,16 +143,19 @@ namespace OpenTKControlGrid
             //x-axis
             //GL.Vertex3(0, viewSize.Y / 2, .1);
             //GL.Vertex3(viewSize.X, viewSize.Y / 2, .1);
-            Draw.Line(0, viewSize.Y / 2, viewSize.X, viewSize.Y / 2, lineThickness: thickLine);
+            Draw.Line(0, viewSize.Y / 2, viewSize.X, viewSize.Y / 2, thickLine);
             //y-axis
             //GL.Vertex3(viewSize.X / 2, 0, .1);
             //GL.Vertex3(viewSize.X / 2, viewSize.Y, .1);
-            Draw.Line(viewSize.X / 2, 0, viewSize.X / 2, viewSize.Y, lineThickness: thickLine);
+            Draw.Line(viewSize.X / 2, 0, viewSize.X / 2, viewSize.Y, thickLine);
             //z-axis (cannot see in orthographic projection)
             //GL.Vertex3(50, upperRight.Y + 10, 0);
             //GL.Vertex3(50, upperRight.Y + 10, 10);
-            Draw.Line(new Vector2(viewSize.X / 2, viewSize.Y / 2), 
-                      new Vector2(viewSize.X / 2, viewSize.Y / 2), -50, 50, thickLine);
+            Draw.Line(new Vector3(viewSize.X / 2, viewSize.Y / 2, -50),
+                      new Vector3(viewSize.X / 2, viewSize.Y / 2, 50), thickLine);
+
+            //test circle function
+            Draw.Circle(100, viewSize.X / 2, viewSize.Y / 2);
         }
         private void drawViewPort()
         {
@@ -178,9 +179,9 @@ namespace OpenTKControlGrid
                 {
                     float y = (spacing * i) + (spacing / 10 * j) + v1.Y;
                     if (j == 0 || j == 10)
-                        Draw.Line(v1.X, y, v2.X, y, z1: z, z2: z, lineThickness: thickLine);
+                        Draw.Line(v1.X, y, v2.X, y, thickLine);
                     else
-                        Draw.Line(v1.X, y, v2.X, y, z, z2: z, lineThickness: thinLine);
+                        Draw.Line(v1.X, y, v2.X, y, thinLine);
                 }
             }
 
@@ -192,9 +193,9 @@ namespace OpenTKControlGrid
                 {
                     float x = (spacing * i) + (spacing / 10 * j) + v1.X;
                     if (j == 0 || j == 10)
-                        Draw.Line(x, v1.Y, x, v2.Y, z1: z, z2: z, lineThickness: thickLine);
+                        Draw.Line(x, v1.Y, x, v2.Y, lineThickness: thickLine);
                     else
-                        Draw.Line(x, v1.Y, x, v2.Y, z1: z, z2: z, lineThickness: thinLine);
+                        Draw.Line(x, v1.Y, x, v2.Y, lineThickness: thinLine);
                 }
             }
         }
