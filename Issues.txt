@@ -1,0 +1,9 @@
+OpenTK CONTROL GRID ISSUES
+
+
+1.  GL.Scale(x, y) currently used for zooming in and out. However, it does not zoom at a center location.
+
+2.  GL.Translate does not provide a one-to-one scale for translation across the screen. At a higher scale(zoomed in),
+	the translation moves faster per pixel. At a lower scale (zoomed out), the translation moves slower.
+	
+3.	
