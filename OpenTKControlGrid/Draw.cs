@@ -160,7 +160,7 @@ namespace OpenTKControlGrid
             GL.End();
         }
         /// <summary>
-        /// Draws an circular ARC
+        /// Draws an circular ARC from startangle Counter-Clockwise to endangle
         /// </summary>
         /// <param name="radius">Radius of the ARC</param>
         /// <param name="x">X coordinate of the center of the ARC</param>
@@ -196,7 +196,7 @@ namespace OpenTKControlGrid
             GL.End();
         }
         /// <summary>
-        /// Draws a wedge of the circle
+        /// Draws a wedge of the circle from startangle Counter-Clockwise to endangle
         /// </summary>
         /// <param name="radius">Radius of the circle for the WEDGE</param>
         /// <param name="x">X coordinate of the center of the WEDGE</param>
@@ -232,6 +232,14 @@ namespace OpenTKControlGrid
             GL.End();
         }
         #endregion
+
+        public static void Rotate(float angle, Vector3 around)
+        {
+            //GL.Translate(around.X, around.Y, around.Z); //translate to origin
+            GL.Rotate(angle, around);
+            //GL.Translate(-around.X, -around.Y, -around.Z); //translate back
+            
+        }
 
     }
 }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenTK;
-//using OpenTK.Math;
 using OpenTK.Graphics.OpenGL;
 
 namespace OpenTKControlGrid
@@ -32,6 +32,7 @@ namespace OpenTKControlGrid
             InitializeMyGLControl();
             InitializeMyScrollBar();
             InitializeMouseEvents();
+            InitializeKeyboardControls();
             InitializeContextMenu();
         }
         bool loaded = false;
@@ -92,7 +93,8 @@ namespace OpenTKControlGrid
             GL.Enable(EnableCap.DepthTest);
 
             //zoom
-            label1.Text = "Zoom: " + zoom.ToString();
+            //label1.Text = "Zoom: " + zoom.ToString();
+            label1.Text = "Test Angle: " + testangle.ToString();
             //if (zoom <= 0)
             //    zoom = dzoom;
             GL.Scale(zoom, zoom, 1);
@@ -141,30 +143,31 @@ namespace OpenTKControlGrid
         private void drawAxes()
         {
             GL.Color3(Color.Blue);
-            //x-axis
-            //GL.Vertex3(0, viewSize.Y / 2, .1);
-            //GL.Vertex3(viewSize.X, viewSize.Y / 2, .1);
             Draw.setLineWidth(thickLine);
+            //x-axis
             Draw.Line(0, viewSize.Y / 2, viewSize.X, viewSize.Y / 2);
+
             //y-axis
-            //GL.Vertex3(viewSize.X / 2, 0, .1);
-            //GL.Vertex3(viewSize.X / 2, viewSize.Y, .1);
             Draw.Line(viewSize.X / 2, 0, viewSize.X / 2, viewSize.Y);
+
             //z-axis (cannot see in orthographic projection)
-            //GL.Vertex3(50, upperRight.Y + 10, 0);
-            //GL.Vertex3(50, upperRight.Y + 10, 10);
             Draw.Line3D(new Vector3(viewSize.X / 2, viewSize.Y / 2, -50),
                         new Vector3(viewSize.X / 2, viewSize.Y / 2, 50));
 
             //test functions
             //Draw.FilledCircle(100, viewSize.X / 2, viewSize.Y / 2);
-            //Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
-            //    new Vector2(viewSize.X / 2 + 100, viewSize.Y / 2 + 100));
-            //Draw.FillWedge(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
-            Draw.Arc(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
-
-
+            GL.PushMatrix();
+            //GL.Translate(new Vector3(viewSize.X / 2, viewSize.Y / 2, 0));
+            Draw.Rotate(testangle, new Vector3(0, 0, 1));
+            Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
+                new Vector2(viewSize.X / 2 + 100, viewSize.Y / 2 + 100));
+            GL.Translate(new Vector3(viewSize.X / 2, viewSize.Y / 2, 0));
+            GL.PopMatrix();
+            //Draw.FillWedge(500, viewSize.X / 2, viewSize.Y / 2, 90, 360);
+            //Draw.Arc(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
+            
         }
+        int testangle = 0;
         private void drawViewPort()
         {
             Draw.setColor(Color.Black);
@@ -212,7 +215,7 @@ namespace OpenTKControlGrid
         }
         #endregion
 
-        #region scrollbars
+        #region Scrollbars
         HScrollBar hScrollBar1 = new HScrollBar();
         VScrollBar vScrollBar1 = new VScrollBar();
 
@@ -317,7 +320,7 @@ namespace OpenTKControlGrid
         }
         #endregion
 
-        #region buttons
+        #region Buttons
         private void button1_Click(object sender, EventArgs e)
         {
             //GL.Frustum(0, viewSize.X, 0, viewSize.Y, -1, 0);
@@ -356,7 +359,7 @@ namespace OpenTKControlGrid
         }
         #endregion
 
-        #region mouse
+        #region Mouse
         Point mousePos = new Point();
         private void InitializeMouseEvents()
         {
@@ -370,6 +373,7 @@ namespace OpenTKControlGrid
         {
             //reset cursor back to default
             this.Cursor = Cursors.Default;
+            glControl1.Invalidate();
         }
 
         void glControl1_MouseDown(object sender, MouseEventArgs e)
@@ -406,6 +410,22 @@ namespace OpenTKControlGrid
 
         #endregion
 
+        #region Keyboard
+        private void InitializeKeyboardControls()
+        {
+            glControl1.KeyPress += glControl1_KeyPress;
+        }
+
+        void glControl1_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 'u')
+                testangle += 5;
+            else if (e.KeyChar == 'i')
+                testangle -= 5;
+            glControl1.Invalidate();
+        }
+        #endregion
+
         #region ContextMenu
         private void InitializeContextMenu()
         {
@@ -429,6 +449,49 @@ namespace OpenTKControlGrid
         }
         #endregion
 
+        Image bmIm;
+        PrintDocument pd = new PrintDocument();
+        PrintDialog pdialog = new PrintDialog();
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (pdialog.ShowDialog() != DialogResult.OK)
+                return;
+            Bitmap glControlBits = GrabScreenshot();
+            PrintImage(glControlBits);
+        }
+
+        private void PrintImage(Image img)
+        {
+            bmIm = img;
+            
+            pd.DefaultPageSettings.PaperSize = new PaperSize("PDI", 1100, 1700);
+            pd.OriginAtMargins = true;
+            pd.DefaultPageSettings.Landscape = true;
+            pdialog.Document = pd;
+
+            pd.Print();
+            pd.PrintPage += pd_PrintPage;
+        }
+
+        void pd_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            double cmToUnits = 100 / 2.54;
+            e.Graphics.DrawImage(bmIm, 0, 0, (float)(17 * cmToUnits), (float)(11 * cmToUnits));
+        }
+
+        public Bitmap GrabScreenshot()
+        {
+            Bitmap bmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+            System.Drawing.Imaging.BitmapData data =
+                bmp.LockBits(this.ClientRectangle, System.Drawing.Imaging.ImageLockMode.WriteOnly,
+                             System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            GL.ReadPixels(0, 0, this.ClientSize.Width, this.ClientSize.Height, PixelFormat.Bgr, PixelType.UnsignedByte,
+                          data.Scan0);
+            bmp.UnlockBits(data);
+            bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            return bmp;
+        }
 
     }
 }

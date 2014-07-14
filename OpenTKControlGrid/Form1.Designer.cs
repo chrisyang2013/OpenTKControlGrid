@@ -36,14 +36,15 @@
             this.label3 = new System.Windows.Forms.Label();
             this.resetBtn = new System.Windows.Forms.Button();
             this.plotToggleBtn = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // glControl1
             // 
             this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Location = new System.Drawing.Point(0, 0);
+            this.glControl1.Location = new System.Drawing.Point(0, -1);
             this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(1282, 578);
+            this.glControl1.Size = new System.Drawing.Size(1282, 579);
             this.glControl1.TabIndex = 0;
             this.glControl1.VSync = false;
             this.glControl1.Load += new System.EventHandler(this.glControl1_Load);
@@ -53,7 +54,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(51, 124);
+            this.label1.Location = new System.Drawing.Point(38, 157);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 1;
@@ -62,7 +63,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(51, 153);
+            this.label2.Location = new System.Drawing.Point(38, 186);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 13);
             this.label2.TabIndex = 2;
@@ -70,7 +71,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(54, 28);
+            this.button1.Location = new System.Drawing.Point(41, 61);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 3;
@@ -80,7 +81,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(144, 28);
+            this.button2.Location = new System.Drawing.Point(131, 61);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 4;
@@ -91,7 +92,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(51, 182);
+            this.label3.Location = new System.Drawing.Point(38, 215);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 5;
@@ -99,7 +100,7 @@
             // 
             // resetBtn
             // 
-            this.resetBtn.Location = new System.Drawing.Point(54, 73);
+            this.resetBtn.Location = new System.Drawing.Point(41, 106);
             this.resetBtn.Name = "resetBtn";
             this.resetBtn.Size = new System.Drawing.Size(75, 23);
             this.resetBtn.TabIndex = 6;
@@ -109,7 +110,7 @@
             // 
             // plotToggleBtn
             // 
-            this.plotToggleBtn.Location = new System.Drawing.Point(144, 73);
+            this.plotToggleBtn.Location = new System.Drawing.Point(131, 106);
             this.plotToggleBtn.Name = "plotToggleBtn";
             this.plotToggleBtn.Size = new System.Drawing.Size(75, 23);
             this.plotToggleBtn.TabIndex = 7;
@@ -117,11 +118,22 @@
             this.plotToggleBtn.UseVisualStyleBackColor = true;
             this.plotToggleBtn.Click += new System.EventHandler(this.plotToggle_Click);
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(41, 12);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 8;
+            this.button3.Text = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1306, 602);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.plotToggleBtn);
             this.Controls.Add(this.resetBtn);
             this.Controls.Add(this.label3);
@@ -150,6 +162,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button resetBtn;
         private System.Windows.Forms.Button plotToggleBtn;
+        private System.Windows.Forms.Button button3;
     }
 }
 
