@@ -17,7 +17,7 @@ namespace OpenTKControlGrid
     {
 
         #region Global Variables
-        //static readonly int dpi = 96;
+        static readonly int dpi = 96;
         static readonly Vector2 bottomLeft = new Vector2(50, 50);
         static readonly Vector2 upperRight = new Vector2(1650, 1050);
         static readonly Vector2 viewSize = new Vector2(1700, 1100);
@@ -72,7 +72,7 @@ namespace OpenTKControlGrid
         float dzoom = .025f;
         float transx = 0;
         float transy = 0;
-        float z = 0;
+        //float z = 0;
         private void glControl1_Paint(object sender, PaintEventArgs e)
         {
             //check if loaded
@@ -154,17 +154,17 @@ namespace OpenTKControlGrid
             Draw.Line3D(new Vector3(viewSize.X / 2, viewSize.Y / 2, -50),
                         new Vector3(viewSize.X / 2, viewSize.Y / 2, 50));
 
-            //test functions
-            //Draw.FilledCircle(100, viewSize.X / 2, viewSize.Y / 2);
-            GL.PushMatrix();
+            ////test functions
+            ////Draw.FilledCircle(100, viewSize.X / 2, viewSize.Y / 2);
+            //GL.PushMatrix();
+            ////GL.Translate(new Vector3(viewSize.X / 2, viewSize.Y / 2, 0));
+            //Draw.Rotate(testangle, new Vector3(0, 0, 1));
+            //Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
+            //    new Vector2(viewSize.X / 2 + 100, viewSize.Y / 2 + 100));
             //GL.Translate(new Vector3(viewSize.X / 2, viewSize.Y / 2, 0));
-            Draw.Rotate(testangle, new Vector3(0, 0, 1));
-            Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
-                new Vector2(viewSize.X / 2 + 100, viewSize.Y / 2 + 100));
-            GL.Translate(new Vector3(viewSize.X / 2, viewSize.Y / 2, 0));
-            GL.PopMatrix();
-            //Draw.FillWedge(500, viewSize.X / 2, viewSize.Y / 2, 90, 360);
-            //Draw.Arc(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
+            //GL.PopMatrix();
+            ////Draw.FillWedge(500, viewSize.X / 2, viewSize.Y / 2, 90, 360);
+            ////Draw.Arc(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
             
         }
         int testangle = 0;
@@ -338,6 +338,10 @@ namespace OpenTKControlGrid
         }
         private void resetBtn_Click(object sender, EventArgs e)
         {
+            resetToDefaultScale();
+        }
+        private void resetToDefaultScale()
+        {
             zoom = 1;
             transx = 0;
             transy = 0;
@@ -449,47 +453,63 @@ namespace OpenTKControlGrid
         }
         #endregion
 
-        Image bmIm;
-        PrintDocument pd = new PrintDocument();
-        PrintDialog pdialog = new PrintDialog();
-
         private void button3_Click(object sender, EventArgs e)
         {
-            if (pdialog.ShowDialog() != DialogResult.OK)
-                return;
-            Bitmap glControlBits = GrabScreenshot();
-            PrintImage(glControlBits);
-        }
-
-        private void PrintImage(Image img)
-        {
-            bmIm = img;
+            //reset the picture to scale to it will save correctly (currently not working)
+            //resetToDefaultScale();
             
-            pd.DefaultPageSettings.PaperSize = new PaperSize("PDI", 1100, 1700);
-            pd.OriginAtMargins = true;
-            pd.DefaultPageSettings.Landscape = true;
-            pdialog.Document = pd;
-
-            pd.Print();
+            //prompt user that scale is not unit scale and return
+            if (zoom != 1)
+            {
+                MessageBox.Show("Please reset the scale and print again.");
+                return;
+            }
+            //Print the image
+            PrintImage();
+        }
+        Image glControlBits;
+        private void PrintImage()
+        {
+            //print the document
+            PrintDocument pd = new PrintDocument();
             pd.PrintPage += pd_PrintPage;
+            pd.DefaultPageSettings.PaperSize = new PaperSize("PDI", 1100, 1700);
+            pd.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
+            pd.DefaultPageSettings.Landscape = true;
+            //pd.DefaultPageSettings.PrinterResolution
+            PrintDialog pdialog = new PrintDialog();
+            pdialog.Document = pd;
+            if (pdialog.ShowDialog() == DialogResult.OK)
+            {
+                //set the print image to be the bitmap of the glcontrol
+                glControlBits = GrabScreenshot();
+                //save the bitmap, for debugging purposes
+                glControlBits.Save(@"C:\Users\Shane\Desktop\testbitmap.bmp");
+                pd.Print();
+            }
+            else return;
         }
 
         void pd_PrintPage(object sender, PrintPageEventArgs e)
         {
-            double cmToUnits = 100 / 2.54;
-            e.Graphics.DrawImage(bmIm, 0, 0, (float)(17 * cmToUnits), (float)(11 * cmToUnits));
+            //double cmToUnits = 100 / 2.54;
+            //e.Graphics.DrawImage(glControlBits, 0, 0, (float)(17 * cmToUnits), (float)(11 * cmToUnits));
+            e.Graphics.DrawImage(glControlBits, 0, 0, 1700, 1100);
         }
 
         public Bitmap GrabScreenshot()
         {
-            Bitmap bmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+            //get the bitmap
+            Rectangle imageArea = new Rectangle(0, 0, (int)viewSize.X, (int)viewSize.Y);
+            Bitmap bmp = new Bitmap(imageArea.Width, imageArea.Height);
             System.Drawing.Imaging.BitmapData data =
-                bmp.LockBits(this.ClientRectangle, System.Drawing.Imaging.ImageLockMode.WriteOnly,
+                bmp.LockBits(imageArea, System.Drawing.Imaging.ImageLockMode.WriteOnly,
                              System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            GL.ReadPixels(0, 0, this.ClientSize.Width, this.ClientSize.Height, PixelFormat.Bgr, PixelType.UnsignedByte,
+            GL.ReadPixels(0, 0, imageArea.Width, imageArea.Height, PixelFormat.Bgr, PixelType.UnsignedByte,
                           data.Scan0);
             bmp.UnlockBits(data);
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+            //return the image
             return bmp;
         }
 
