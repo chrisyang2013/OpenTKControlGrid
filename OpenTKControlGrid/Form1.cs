@@ -17,10 +17,13 @@ namespace OpenTKControlGrid
     {
 
         #region Global Variables
-        static readonly int dpi = 96;
-        static readonly Vector2 bottomLeft = new Vector2(50, 50);
-        static readonly Vector2 upperRight = new Vector2(1650, 1050);
-        static readonly Vector2 viewSize = new Vector2(1700, 1100);
+        static readonly float dpi = 96;
+        static readonly Vector2 viewSize = new Vector2(17 * dpi, 11 * dpi);
+        static readonly Vector2 bottomLeft = new Vector2(dpi / 2, dpi / 2);
+        static readonly Vector2 upperRight = new Vector2(viewSize.X - (dpi / 2), viewSize.Y - (dpi / 2));
+        //static readonly Vector2 bottomLeft = new Vector2(50, 50);
+        //static readonly Vector2 upperRight = new Vector2(1650, 1050);
+        //static readonly Vector2 viewSize = new Vector2(1700, 1100);
         private const float thickLine = 2f;
         private const float thinLine = 1f;
         #endregion
@@ -109,7 +112,7 @@ namespace OpenTKControlGrid
             //GL.Viewport(0, 0, 100, 100);
 
             //draw
-            int spacing = 100;
+            float spacing = dpi;
             if (((ToolStripMenuItem)glControl1.ContextMenuStrip.Items[0]).Checked)
                 drawViewPort();
             if (((ToolStripMenuItem)glControl1.ContextMenuStrip.Items[1]).Checked)
@@ -127,13 +130,17 @@ namespace OpenTKControlGrid
                 }
                 else if(plotToggleBtn.Text == "Grid 2")
                 {
-                    vec1 = new Vector2(250, 250);
-                    vec2 = new Vector2(1650, 1050);//same as upperRight
+                    //vec1 = new Vector2(250, 250);
+                    //vec2 = new Vector2(1650, 1050);//same as upperRight
+                    vec1 = new Vector2(2.5f * dpi, 2.5f * dpi);
+                    vec2 = upperRight;
                 }
                 else if(plotToggleBtn.Text == "Grid 3")
                 {
-                    vec1 = new Vector2(250, 550);
-                    vec2 = new Vector2(1650, 1050);//same as upperRight
+                    vec1 = new Vector2(2.5f * dpi, 5.5f * dpi);
+                    vec2 = upperRight;
+                    //vec1 = new Vector2(250, 550);
+                    //vec2 = new Vector2(1650, 1050);//same as upperRight
                 }
                 drawGrid(vec1, vec2, spacing);
             }
@@ -180,11 +187,11 @@ namespace OpenTKControlGrid
             Draw.setLineWidth(thickLine);
             Draw.Rectangle(bottomLeft, upperRight);
         }
-        private void drawGrid(Vector2 v1, Vector2 v2, int spacing)
+        private void drawGrid(Vector2 v1, Vector2 v2, float spacing)
         {
             Draw.setColor(Color.Black);
             //plot horizontal lines
-            int nHLines = (int)(v2.Y - v1.Y) / spacing;
+            int nHLines = (int)((v2.Y - v1.Y) / spacing);
             for (int i = 0; i < nHLines; i++)
             {
                 for (int j = 0; j <= 10; j++)//for sub-lines
@@ -199,7 +206,7 @@ namespace OpenTKControlGrid
             }
 
             //plot vertical lines
-            int nVLines = (int)(v2.X - v1.X) / spacing;
+            int nVLines = (int)((v2.X - v1.X) / spacing);
             for (int i = 0; i < nVLines; i++)
             {
                 for (int j = 0; j <= 10; j++)
@@ -453,50 +460,16 @@ namespace OpenTKControlGrid
         }
         #endregion
 
-        private void button3_Click(object sender, EventArgs e)
+        Image glControlBits;
+        private void print_Click(object sender, EventArgs e)
         {
-            //reset the picture to scale to it will save correctly (currently not working)
-            //resetToDefaultScale();
-            
-            //prompt user that scale is not unit scale and return
-            if (zoom != 1)
+            if (zoom != 1 || transx != 0 || transy != 0)
             {
-                MessageBox.Show("Please reset the scale and print again.");
+                MessageBox.Show("Please reset the plot and print again.");
                 return;
             }
-            //Print the image
             PrintImage();
         }
-        Image glControlBits;
-        private void PrintImage()
-        {
-            //print the document
-            PrintDocument pd = new PrintDocument();
-            pd.PrintPage += pd_PrintPage;
-            pd.DefaultPageSettings.PaperSize = new PaperSize("PDI", 1100, 1700);
-            pd.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
-            pd.DefaultPageSettings.Landscape = true;
-            //pd.DefaultPageSettings.PrinterResolution
-            PrintDialog pdialog = new PrintDialog();
-            pdialog.Document = pd;
-            if (pdialog.ShowDialog() == DialogResult.OK)
-            {
-                //set the print image to be the bitmap of the glcontrol
-                glControlBits = GrabScreenshot();
-                //save the bitmap, for debugging purposes
-                glControlBits.Save(@"C:\Users\Shane\Desktop\testbitmap.bmp");
-                pd.Print();
-            }
-            else return;
-        }
-
-        void pd_PrintPage(object sender, PrintPageEventArgs e)
-        {
-            //double cmToUnits = 100 / 2.54;
-            //e.Graphics.DrawImage(glControlBits, 0, 0, (float)(17 * cmToUnits), (float)(11 * cmToUnits));
-            e.Graphics.DrawImage(glControlBits, 0, 0, 1700, 1100);
-        }
-
         public Bitmap GrabScreenshot()
         {
             //get the bitmap
@@ -512,6 +485,42 @@ namespace OpenTKControlGrid
             //return the image
             return bmp;
         }
+        private void PrintImage()
+        {
+            //print the document
+            PrintDocument pd = new PrintDocument();
+            pd.PrintPage += pd_PrintPage;
+            pd.DefaultPageSettings.PaperSize = new PaperSize("PDI", 1100, 1700);
+            pd.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
+            pd.DefaultPageSettings.Landscape = true;
+            pd.OriginAtMargins = true;
 
+            PrintDialog pdialog = new PrintDialog();
+            pdialog.Document = pd;
+            if (pdialog.ShowDialog() == DialogResult.OK)
+            {
+                //set the print image to be the bitmap of the glcontrol
+                glControlBits = GrabScreenshot();
+                //save the bitmap, for debugging purposes
+                //glControlBits.Save(@"C:\Users\Shane\Desktop\testbitmap.bmp");
+                pd.Print();
+            }
+            else return;
+        }
+        void pd_PrintPage(object sender, PrintPageEventArgs e)
+        {
+            Image i = glControlBits;
+            Rectangle m = e.MarginBounds;
+
+            if ((double)i.Width / (double)i.Height > (double)m.Width / (double)m.Height) // image is wider
+            {
+                m.Height = (int)((double)i.Height / (double)i.Width * (double)m.Width);
+            }
+            else
+            {
+                m.Width = (int)((double)i.Width / (double)i.Height * (double)m.Height);
+            }
+            e.Graphics.DrawImage(i, m);
+        }
     }
 }
