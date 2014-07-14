@@ -463,11 +463,7 @@ namespace OpenTKControlGrid
         Image glControlBits;
         private void print_Click(object sender, EventArgs e)
         {
-            if (zoom != 1 || transx != 0 || transy != 0)
-            {
-                MessageBox.Show("Please reset the plot and print again.");
-                return;
-            }
+            resetToDefaultScale();
             PrintImage();
         }
         public Bitmap GrabScreenshot()
