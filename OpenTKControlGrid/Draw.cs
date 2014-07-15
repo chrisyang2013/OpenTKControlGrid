@@ -233,13 +233,22 @@ namespace OpenTKControlGrid
         }
         #endregion
 
-        public static void Rotate(float angle, Vector3 around)
+        #region Rotate
+        /// <summary>
+        /// Builds the rotational matrix
+        /// <para>Use Push and Pop matrices before and after</para>
+        /// </summary>
+        /// <param name="angle">Specify the ANGLE of rotation</param>
+        /// <param name="axis">Specify the AXIS of rotation</param>
+        /// <param name="x">X-Coordinate of the object</param>
+        /// <param name="y">Y-Coordinate of the object</param>
+        /// <param name="z">Z-Coordinate of the object</param>
+        public static void Rotate(float angle, Vector3 axis, float x, float y, float z = 0)
         {
-            //GL.Translate(around.X, around.Y, around.Z); //translate to origin
-            GL.Rotate(angle, around);
-            //GL.Translate(-around.X, -around.Y, -around.Z); //translate back
-            
+            GL.Translate(x, y, z); //translate origin to object
+            GL.Rotate(angle, axis);
+            GL.Translate(-x, -y, -z); //translate back
         }
-
+        #endregion
     }
 }

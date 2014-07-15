@@ -40,6 +40,11 @@ namespace OpenTKControlGrid
             InitializeComboBox();
             InitializeToolStripView();
         }
+        public Form1(List<PointF> pt)
+            :this()
+        {
+
+        }
         bool loaded = false;
         private void glControl1_Load(object sender, EventArgs e)
         {
@@ -73,10 +78,11 @@ namespace OpenTKControlGrid
         #endregion
 
         #region Draw
-        float zoom = 1f;
+        //Initialize settings to center the grid
+        float zoom = 0.575f;
         float dzoom = .025f;
-        float transx = 0;
-        float transy = 0;
+        float transx = -380;
+        float transy = 750;
         //float z = 0;
         Vector2 gridBottomLeft;
         Vector2 gridUpperRight;
@@ -85,7 +91,12 @@ namespace OpenTKControlGrid
             //check if loaded
             if (!loaded)
                 return;
-            
+            DrawObjects();
+            //drawTestFunc();
+        }
+ 
+        private void DrawObjects()
+        {
             //clear buffer
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -100,17 +111,16 @@ namespace OpenTKControlGrid
             GL.Enable(EnableCap.DepthTest);
 
             //zoom
+            label1.Text = "";
             //label1.Text = "Zoom: " + zoom.ToString();
-            label1.Text = "Test Angle: " + testangle.ToString();
-            //if (zoom <= 0)
-            //    zoom = dzoom;
             GL.Scale(zoom, zoom, 1);
-            
+
 
             //pan
-            label2.Text = "transx: " + transx + ", transy: " + transy;
+            //label2.Text = "transx: " + transx + ", transy: " + transy;
+            label2.Text = "";
             GL.Translate(-transx, transy, 0);
-            
+
             //set viewport again
             //GL.Ortho(bottomLeft.X, upperRight.X, bottomLeft.Y, upperRight.Y, -1, 1);
             //GL.Viewport(0, 0, 100, 100);
@@ -125,9 +135,25 @@ namespace OpenTKControlGrid
                 drawPageOutline();
             if (((ToolStripMenuItem)viewToolStripMenuItem.DropDownItems[3]).Checked)
                 drawGrid(gridBottomLeft, gridUpperRight, spacing);
+            drawTestFunc();
             glControl1.SwapBuffers();
         }
 
+        int testangle = 0;
+        private void drawTestFunc()
+        {
+            
+            //test functions
+            Draw.setColor(Color.Blue);
+            //Draw.FilledCircle(100, viewSize.X / 2, viewSize.Y / 2);
+            //Draw.FillWedge(500, viewSize.X / 2, viewSize.Y / 2, 90, 360);
+            //Draw.Arc(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
+            //GL.PushMatrix();
+            //Draw.Rotate(testangle, new Vector3(0, 0, 1), viewSize.X / 2, viewSize.Y / 2);
+            //Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
+            //    new Vector2(viewSize.X / 2 + 100, viewSize.Y / 2 + 100));
+            //GL.PopMatrix();
+        }
         private void drawAxes()
         {
             GL.Color3(Color.Blue);
@@ -141,21 +167,7 @@ namespace OpenTKControlGrid
             //z-axis (cannot see in orthographic projection)
             Draw.Line3D(new Vector3(viewSize.X / 2, viewSize.Y / 2, -50),
                         new Vector3(viewSize.X / 2, viewSize.Y / 2, 50));
-
-            ////test functions
-            ////Draw.FilledCircle(100, viewSize.X / 2, viewSize.Y / 2);
-            //GL.PushMatrix();
-            ////GL.Translate(new Vector3(viewSize.X / 2, viewSize.Y / 2, 0));
-            //Draw.Rotate(testangle, new Vector3(0, 0, 1));
-            //Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
-            //    new Vector2(viewSize.X / 2 + 100, viewSize.Y / 2 + 100));
-            //GL.Translate(new Vector3(viewSize.X / 2, viewSize.Y / 2, 0));
-            //GL.PopMatrix();
-            ////Draw.FillWedge(500, viewSize.X / 2, viewSize.Y / 2, 90, 360);
-            ////Draw.Arc(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
-            
         }
-        int testangle = 0;
         private void drawViewPort()
         {
             Draw.setColor(Color.Black);
@@ -344,7 +356,8 @@ namespace OpenTKControlGrid
                 mousePos = e.Location;
                 glControl1.Invalidate();
             }
-            label3.Text = e.Location.ToString();
+            //label3.Text = e.Location.ToString();
+            label3.Text = "";
         }
 
         void glControl1_MouseWheel(object sender, MouseEventArgs e)
@@ -363,17 +376,16 @@ namespace OpenTKControlGrid
         {
             glControl1.KeyDown += glControl1_KeyDown;
         }
-
         void glControl1_KeyDown(object sender, KeyEventArgs e)
         {
             switch(e.KeyCode)
             {
-                case Keys.U:
-                    testangle += 5;
-                    break;
-                case Keys.I:
-                    testangle -= 5;
-                    break;
+                //case Keys.U:
+                //    testangle += 15;
+                //    break;
+                //case Keys.I:
+                //    testangle -= 15;
+                //    break;
                 case Keys.Escape:
                     leftClickToMove = false;
                     glControl1.Cursor = Cursors.Default;
@@ -408,6 +420,16 @@ namespace OpenTKControlGrid
 
         #region Print
         Image glControlBits;
+        private void resetToPrintScale()
+        {
+            zoom = 1f;
+            transx = 0;
+            transy = 0;
+            hScrollBar1.Value = 0;
+            vScrollBar1.Value = 0;
+            glControl1.Invalidate();
+            glControl1.Focus();
+        }
         public Bitmap GrabScreenshot()
         {
             //get the bitmap
@@ -484,11 +506,11 @@ namespace OpenTKControlGrid
         }
         private void resetToDefaultScale()
         {
-            zoom = 1;
-            transx = 0;
-            transy = 0;
-            hScrollBar1.Value = 0;
-            vScrollBar1.Value = 0;
+            zoom = 0.575f;
+            transx = -380;
+            transy = 750;
+            hScrollBar1.Value = 50;
+            vScrollBar1.Value = 50;
             glControl1.Invalidate();
             glControl1.Focus();
         }
@@ -543,14 +565,13 @@ namespace OpenTKControlGrid
             glControl1.Cursor = Cursors.Hand;
             glControl1.Invalidate();
         }
-
         #endregion
 
         #region Tool Strip File
         private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //reset the scale to unit scale so it can print to the correct size
-            resetToDefaultScale();
+            resetToPrintScale();
             //print the image
             PrintImage();
         }
@@ -559,14 +580,9 @@ namespace OpenTKControlGrid
             //save view scale
             float ptransx = 0, ptransy = 0, pzoom = 0; int phbar = 0, pvbar = 0;
             saveCurrentScale(ref pzoom, ref ptransx, ref ptransy, ref phbar, ref pvbar);
-            //ptransx = transx;
-            //ptransy = transy;
-            //pzoom = zoom;
-            //phbar = hscrollbar1.value;
-            //pvbar = vscrollbar1.value;
 
             //reset view scale
-            resetToDefaultScale();
+            resetToPrintScale();
 
             //save the bitmap
             saveBitmap();
