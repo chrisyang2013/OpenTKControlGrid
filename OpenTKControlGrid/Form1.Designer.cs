@@ -28,23 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.glControl1 = new OpenTK.GLControl();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.resetBtn = new System.Windows.Forms.Button();
-            this.plotToggleBtn = new System.Windows.Forms.Button();
-            this.print_btn = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PrintToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.zoomInTool = new System.Windows.Forms.ToolStripButton();
+            this.zoomOutTool = new System.Windows.Forms.ToolStripButton();
+            this.resetTool = new System.Windows.Forms.ToolStripButton();
+            this.handTool = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.gridToolComboBox = new System.Windows.Forms.ToolStripComboBox();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.axisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pageOutlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // glControl1
             // 
             this.glControl1.BackColor = System.Drawing.Color.Black;
-            this.glControl1.Location = new System.Drawing.Point(0, -1);
+            this.glControl1.Location = new System.Drawing.Point(0, 52);
             this.glControl1.Name = "glControl1";
-            this.glControl1.Size = new System.Drawing.Size(1282, 579);
+            this.glControl1.Size = new System.Drawing.Size(1282, 526);
             this.glControl1.TabIndex = 0;
             this.glControl1.VSync = false;
             this.glControl1.Load += new System.EventHandler(this.glControl1_Load);
@@ -69,26 +84,6 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "label2";
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(41, 61);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "+Zoom";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(131, 61);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "-Zoom";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -98,55 +93,179 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "label3";
             // 
-            // resetBtn
+            // menuStrip1
             // 
-            this.resetBtn.Location = new System.Drawing.Point(41, 106);
-            this.resetBtn.Name = "resetBtn";
-            this.resetBtn.Size = new System.Drawing.Size(75, 23);
-            this.resetBtn.TabIndex = 6;
-            this.resetBtn.Text = "Reset";
-            this.resetBtn.UseVisualStyleBackColor = true;
-            this.resetBtn.Click += new System.EventHandler(this.resetBtn_Click);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.viewToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1306, 24);
+            this.menuStrip1.TabIndex = 9;
+            this.menuStrip1.Text = "menuStrip1";
             // 
-            // plotToggleBtn
+            // fileToolStripMenuItem
             // 
-            this.plotToggleBtn.Location = new System.Drawing.Point(131, 106);
-            this.plotToggleBtn.Name = "plotToggleBtn";
-            this.plotToggleBtn.Size = new System.Drawing.Size(75, 23);
-            this.plotToggleBtn.TabIndex = 7;
-            this.plotToggleBtn.Text = "Grid 1";
-            this.plotToggleBtn.UseVisualStyleBackColor = true;
-            this.plotToggleBtn.Click += new System.EventHandler(this.plotToggle_Click);
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveImageToolStripMenuItem,
+            this.PrintToolStripMenuItem,
+            this.exitToolStripMenuItem1});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
             // 
-            // print_btn
+            // PrintToolStripMenuItem
             // 
-            this.print_btn.Location = new System.Drawing.Point(41, 12);
-            this.print_btn.Name = "print_btn";
-            this.print_btn.Size = new System.Drawing.Size(75, 23);
-            this.print_btn.TabIndex = 8;
-            this.print_btn.Text = "Print";
-            this.print_btn.UseVisualStyleBackColor = true;
-            this.print_btn.Click += new System.EventHandler(this.print_Click);
+            this.PrintToolStripMenuItem.Name = "PrintToolStripMenuItem";
+            this.PrintToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.PrintToolStripMenuItem.Text = "Print";
+            this.PrintToolStripMenuItem.Click += new System.EventHandler(this.PrintToolStripMenuItem_Click);
+            // 
+            // saveImageToolStripMenuItem
+            // 
+            this.saveImageToolStripMenuItem.Name = "saveImageToolStripMenuItem";
+            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.saveImageToolStripMenuItem.Text = "Save";
+            this.saveImageToolStripMenuItem.Click += new System.EventHandler(this.saveImageToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem1
+            // 
+            this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(99, 22);
+            this.exitToolStripMenuItem1.Text = "Exit";
+            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.zoomInTool,
+            this.zoomOutTool,
+            this.resetTool,
+            this.handTool,
+            this.toolStripSeparator1,
+            this.gridToolComboBox});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(1306, 25);
+            this.toolStrip1.TabIndex = 10;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // zoomInTool
+            // 
+            this.zoomInTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.zoomInTool.Image = ((System.Drawing.Image)(resources.GetObject("zoomInTool.Image")));
+            this.zoomInTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.zoomInTool.Name = "zoomInTool";
+            this.zoomInTool.Size = new System.Drawing.Size(23, 22);
+            this.zoomInTool.Text = "Zoom in";
+            this.zoomInTool.Click += new System.EventHandler(this.zoomInTool_Click);
+            // 
+            // zoomOutTool
+            // 
+            this.zoomOutTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.zoomOutTool.Image = ((System.Drawing.Image)(resources.GetObject("zoomOutTool.Image")));
+            this.zoomOutTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.zoomOutTool.Name = "zoomOutTool";
+            this.zoomOutTool.Size = new System.Drawing.Size(23, 22);
+            this.zoomOutTool.Text = "Zoom out";
+            this.zoomOutTool.Click += new System.EventHandler(this.zoomOutTool_Click);
+            // 
+            // resetTool
+            // 
+            this.resetTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.resetTool.Image = ((System.Drawing.Image)(resources.GetObject("resetTool.Image")));
+            this.resetTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.resetTool.Name = "resetTool";
+            this.resetTool.Size = new System.Drawing.Size(23, 22);
+            this.resetTool.Text = "Reset";
+            this.resetTool.Click += new System.EventHandler(this.resetTool_Click);
+            // 
+            // handTool
+            // 
+            this.handTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.handTool.Image = ((System.Drawing.Image)(resources.GetObject("handTool.Image")));
+            this.handTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.handTool.Name = "handTool";
+            this.handTool.Size = new System.Drawing.Size(23, 22);
+            this.handTool.Text = "Move";
+            this.handTool.Click += new System.EventHandler(this.handTool_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // gridToolComboBox
+            // 
+            this.gridToolComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.gridToolComboBox.DropDownWidth = 121;
+            this.gridToolComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.gridToolComboBox.Items.AddRange(new object[] {
+            "None",
+            "16 x 10",
+            "14 x 8",
+            "14 x 5"});
+            this.gridToolComboBox.Name = "gridToolComboBox";
+            this.gridToolComboBox.Size = new System.Drawing.Size(80, 25);
+            this.gridToolComboBox.ToolTipText = "Select Grid";
+            this.gridToolComboBox.SelectedIndexChanged += new System.EventHandler(this.gridToolComboBox_SelectedIndexChanged);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewportToolStripMenuItem,
+            this.axisToolStripMenuItem,
+            this.pageOutlineToolStripMenuItem,
+            this.gridToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // viewportToolStripMenuItem
+            // 
+            this.viewportToolStripMenuItem.Name = "viewportToolStripMenuItem";
+            this.viewportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.viewportToolStripMenuItem.Text = "Viewport";
+            // 
+            // axisToolStripMenuItem
+            // 
+            this.axisToolStripMenuItem.Name = "axisToolStripMenuItem";
+            this.axisToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.axisToolStripMenuItem.Text = "Axes";
+            // 
+            // pageOutlineToolStripMenuItem
+            // 
+            this.pageOutlineToolStripMenuItem.Name = "pageOutlineToolStripMenuItem";
+            this.pageOutlineToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.pageOutlineToolStripMenuItem.Text = "Page Outline";
+            // 
+            // gridToolStripMenuItem
+            // 
+            this.gridToolStripMenuItem.Name = "gridToolStripMenuItem";
+            this.gridToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gridToolStripMenuItem.Text = "Grid";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1306, 602);
-            this.Controls.Add(this.print_btn);
-            this.Controls.Add(this.plotToggleBtn);
-            this.Controls.Add(this.resetBtn);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.glControl1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Layout += new System.Windows.Forms.LayoutEventHandler(this.Form1_Layout);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -157,12 +276,24 @@
         private OpenTK.GLControl glControl1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button resetBtn;
-        private System.Windows.Forms.Button plotToggleBtn;
-        private System.Windows.Forms.Button print_btn;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem PrintToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton zoomInTool;
+        private System.Windows.Forms.ToolStripButton zoomOutTool;
+        private System.Windows.Forms.ToolStripButton resetTool;
+        private System.Windows.Forms.ToolStripButton handTool;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripComboBox gridToolComboBox;
+        private System.Windows.Forms.ToolStripMenuItem saveImageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem axisToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pageOutlineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gridToolStripMenuItem;
     }
 }
 

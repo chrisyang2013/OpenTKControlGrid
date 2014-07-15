@@ -37,6 +37,8 @@ namespace OpenTKControlGrid
             InitializeMouseEvents();
             InitializeKeyboardControls();
             InitializeContextMenu();
+            InitializeComboBox();
+            InitializeToolStripView();
         }
         bool loaded = false;
         private void glControl1_Load(object sender, EventArgs e)
@@ -76,6 +78,8 @@ namespace OpenTKControlGrid
         float transx = 0;
         float transy = 0;
         //float z = 0;
+        Vector2 gridBottomLeft;
+        Vector2 gridUpperRight;
         private void glControl1_Paint(object sender, PaintEventArgs e)
         {
             //check if loaded
@@ -113,37 +117,14 @@ namespace OpenTKControlGrid
 
             //draw
             float spacing = dpi;
-            if (((ToolStripMenuItem)glControl1.ContextMenuStrip.Items[0]).Checked)
+            if (((ToolStripMenuItem)viewToolStripMenuItem.DropDownItems[0]).Checked)
                 drawViewPort();
-            if (((ToolStripMenuItem)glControl1.ContextMenuStrip.Items[1]).Checked)
+            if (((ToolStripMenuItem)viewToolStripMenuItem.DropDownItems[1]).Checked)
                 drawAxes();
-            if (((ToolStripMenuItem)glControl1.ContextMenuStrip.Items[2]).Checked)
+            if (((ToolStripMenuItem)viewToolStripMenuItem.DropDownItems[2]).Checked)
                 drawPageOutline();
-            if (((ToolStripMenuItem)glControl1.ContextMenuStrip.Items[3]).Checked)
-            {
-                Vector2 vec1 = new Vector2();
-                Vector2 vec2 = new Vector2();
-                if (plotToggleBtn.Text == "Grid 1")
-                {
-                    vec1 = bottomLeft;
-                    vec2 = upperRight;
-                }
-                else if(plotToggleBtn.Text == "Grid 2")
-                {
-                    //vec1 = new Vector2(250, 250);
-                    //vec2 = new Vector2(1650, 1050);//same as upperRight
-                    vec1 = new Vector2(2.5f * dpi, 2.5f * dpi);
-                    vec2 = upperRight;
-                }
-                else if(plotToggleBtn.Text == "Grid 3")
-                {
-                    vec1 = new Vector2(2.5f * dpi, 5.5f * dpi);
-                    vec2 = upperRight;
-                    //vec1 = new Vector2(250, 550);
-                    //vec2 = new Vector2(1650, 1050);//same as upperRight
-                }
-                drawGrid(vec1, vec2, spacing);
-            }
+            if (((ToolStripMenuItem)viewToolStripMenuItem.DropDownItems[3]).Checked)
+                drawGrid(gridBottomLeft, gridUpperRight, spacing);
             glControl1.SwapBuffers();
         }
 
@@ -327,49 +308,6 @@ namespace OpenTKControlGrid
         }
         #endregion
 
-        #region Buttons
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //GL.Frustum(0, viewSize.X, 0, viewSize.Y, -1, 0);
-            zoom += 2 * dzoom;
-            glControl1.Invalidate();
-            glControl1.Focus();
-        }
-        private void button2_Click(object sender, EventArgs e)
-        {
-            zoom -= 2 * dzoom;
-            if (zoom < dzoom)
-                zoom = dzoom;
-            glControl1.Invalidate();
-            glControl1.Focus();
-        }
-        private void resetBtn_Click(object sender, EventArgs e)
-        {
-            resetToDefaultScale();
-        }
-        private void resetToDefaultScale()
-        {
-            zoom = 1;
-            transx = 0;
-            transy = 0;
-            hScrollBar1.Value = 0;
-            vScrollBar1.Value = 0;
-            glControl1.Invalidate();
-            glControl1.Focus();
-        }
-        private void plotToggle_Click(object sender, EventArgs e)
-        {
-            if (((Button)sender).Text == "Grid 1")
-                ((Button)sender).Text = "Grid 2";
-            else if (((Button)sender).Text == "Grid 2")
-                ((Button)sender).Text = "Grid 3";
-            else if (((Button)sender).Text == "Grid 3")
-                ((Button)sender).Text = "Grid 1";
-            glControl1.Invalidate();
-            glControl1.Focus();
-        }
-        #endregion
-
         #region Mouse
         Point mousePos = new Point();
         private void InitializeMouseEvents()
@@ -389,16 +327,15 @@ namespace OpenTKControlGrid
 
         void glControl1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Middle)
+            if (e.Button == MouseButtons.Middle || (e.Button == MouseButtons.Left && leftClickToMove))
             {
                 mousePos = e.Location;
             }
-
         }
 
         void glControl1_MouseMove(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Middle)
+            if(e.Button == MouseButtons.Middle || (e.Button == MouseButtons.Left && leftClickToMove))
             {
                 this.Cursor = Cursors.Hand;
                 transx -= (e.X - mousePos.X) * 2f;//set as a factor of 2 to move faster
@@ -424,15 +361,26 @@ namespace OpenTKControlGrid
         #region Keyboard
         private void InitializeKeyboardControls()
         {
-            glControl1.KeyPress += glControl1_KeyPress;
+            glControl1.KeyDown += glControl1_KeyDown;
         }
 
-        void glControl1_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        void glControl1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyChar == 'u')
-                testangle += 5;
-            else if (e.KeyChar == 'i')
-                testangle -= 5;
+            switch(e.KeyCode)
+            {
+                case Keys.U:
+                    testangle += 5;
+                    break;
+                case Keys.I:
+                    testangle -= 5;
+                    break;
+                case Keys.Escape:
+                    leftClickToMove = false;
+                    glControl1.Cursor = Cursors.Default;
+                    break;
+                default:
+                    break;
+            }
             glControl1.Invalidate();
         }
         #endregion
@@ -441,31 +389,25 @@ namespace OpenTKControlGrid
         private void InitializeContextMenu()
         {
             ContextMenuStrip c = new ContextMenuStrip();
-            c.Items.Add("Viewport");
-            c.Items.Add("Axes");
-            c.Items.Add("Page Outline");
-            c.Items.Add("Grid");
+            //c.Items.Add("Viewport");
+            //c.Items.Add("Axes");
+            //c.Items.Add("Page Outline");
+            //c.Items.Add("Grid");
             foreach (ToolStripMenuItem item in c.Items)
             {
-                item.Checked = true;//enable all controls by default
-                item.Click += contextMenuItem_Click;
+                //item.Checked = true;//enable all controls by default
+                //item.Click += contextMenuItem_Click;
             }
             glControl1.ContextMenuStrip = c;
         }
         void contextMenuItem_Click(object sender, EventArgs e)
         {
-            //toggle check state
-            ((ToolStripMenuItem)sender).Checked = !((ToolStripMenuItem)sender).Checked;
             glControl1.Invalidate();
         }
         #endregion
 
+        #region Print
         Image glControlBits;
-        private void print_Click(object sender, EventArgs e)
-        {
-            resetToDefaultScale();
-            PrintImage();
-        }
         public Bitmap GrabScreenshot()
         {
             //get the bitmap
@@ -491,6 +433,7 @@ namespace OpenTKControlGrid
             pd.DefaultPageSettings.Landscape = true;
             pd.OriginAtMargins = true;
 
+            //creates a print dialog for user to select printer, copies, etc...
             PrintDialog pdialog = new PrintDialog();
             pdialog.Document = pd;
             if (pdialog.ShowDialog() == DialogResult.OK)
@@ -518,5 +461,165 @@ namespace OpenTKControlGrid
             }
             e.Graphics.DrawImage(i, m);
         }
+        #endregion
+
+        #region Tool Menu
+        private void zoomInTool_Click(object sender, EventArgs e)
+        {
+            zoom += 2 * dzoom;
+            glControl1.Invalidate();
+            glControl1.Focus();
+        }
+        private void zoomOutTool_Click(object sender, EventArgs e)
+        {
+            zoom -= 2 * dzoom;
+            if (zoom < dzoom)
+                zoom = dzoom;
+            glControl1.Invalidate();
+            glControl1.Focus();
+        }
+        private void resetTool_Click(object sender, EventArgs e)
+        {
+            resetToDefaultScale();
+        }
+        private void resetToDefaultScale()
+        {
+            zoom = 1;
+            transx = 0;
+            transy = 0;
+            hScrollBar1.Value = 0;
+            vScrollBar1.Value = 0;
+            glControl1.Invalidate();
+            glControl1.Focus();
+        }
+        private void restoreScale(float z, float tx, float ty, int hv, int vv)
+        {
+            zoom = z;
+            transx = tx;
+            transy = ty;
+            hScrollBar1.Value = hv;
+            vScrollBar1.Value = vv;
+            glControl1.Invalidate();
+            glControl1.Focus();
+        }
+        private void saveCurrentScale(ref float z, ref float tx, ref float ty, ref int hv, ref int vv)
+        {
+            z = zoom;
+            tx = transx;
+            ty = transy;
+            hv = hScrollBar1.Value;
+            vv = vScrollBar1.Value;
+        }
+        private void gridToolComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            gridUpperRight = upperRight;
+            switch (gridToolComboBox.SelectedIndex)
+            {
+                case 0:
+                    gridBottomLeft = upperRight; // no grid
+                    break;
+                case 1:
+                    gridBottomLeft = bottomLeft;
+                    break;
+                case 2:
+                    gridBottomLeft = new Vector2(2.5f * dpi, 2.5f * dpi);
+                    break;
+                case 3:
+                    gridBottomLeft = new Vector2(2.5f * dpi, 5.5f * dpi);
+                    break;
+                default:
+                    break;
+            }
+            glControl1.Invalidate();
+        }
+        private void InitializeComboBox()
+        {
+            this.gridToolComboBox.SelectedIndex = 1;
+        }
+        bool leftClickToMove = false;
+        private void handTool_Click(object sender, EventArgs e)
+        {
+            leftClickToMove = true;
+            glControl1.Cursor = Cursors.Hand;
+            glControl1.Invalidate();
+        }
+
+        #endregion
+
+        #region Tool Strip File
+        private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //reset the scale to unit scale so it can print to the correct size
+            resetToDefaultScale();
+            //print the image
+            PrintImage();
+        }
+        private void saveImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //save view scale
+            float ptransx = 0, ptransy = 0, pzoom = 0; int phbar = 0, pvbar = 0;
+            saveCurrentScale(ref pzoom, ref ptransx, ref ptransy, ref phbar, ref pvbar);
+            //ptransx = transx;
+            //ptransy = transy;
+            //pzoom = zoom;
+            //phbar = hscrollbar1.value;
+            //pvbar = vscrollbar1.value;
+
+            //reset view scale
+            resetToDefaultScale();
+
+            //save the bitmap
+            saveBitmap();
+
+            //restore view scale
+            restoreScale(pzoom, ptransx, ptransy, phbar, pvbar);
+        }
+        private void saveBitmap()
+        {
+            SaveFileDialog savedia = new SaveFileDialog();
+            savedia.DefaultExt = ".bmp";
+            if (savedia.ShowDialog() == DialogResult.OK)
+            {
+                //set the print image to be the bitmap of the glcontrol
+                glControlBits = GrabScreenshot();
+                //save the bitmap
+                glControlBits.Save(savedia.FileName);
+            }
+            else return;
+        }
+        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        #endregion
+
+        #region Tool Strip View
+        private void InitializeToolStripView()
+        {
+            foreach(ToolStripMenuItem item in viewToolStripMenuItem.DropDownItems)
+            {
+                switch(item.Text)
+                {
+                    case "Axes":
+                        item.Checked = false;
+                        break;
+                    case "Viewport":
+                    case "Page Outline":
+                    case "Grid":
+                    default:
+                        item.Checked = true;
+                        break;
+                }
+                item.Click += viewToolStripMenuItem_Clicked;
+            }
+        }
+        void viewToolStripMenuItem_Clicked(object sender, EventArgs e)
+        {
+            //toggle check state
+            ((ToolStripMenuItem)sender).Checked = !((ToolStripMenuItem)sender).Checked;
+            glControl1.Invalidate();
+        }
+        #endregion
+
     }
 }
