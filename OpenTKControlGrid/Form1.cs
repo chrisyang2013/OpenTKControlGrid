@@ -116,6 +116,7 @@ namespace OpenTKControlGrid
 
             //zoom
             //label1.Text = "";
+            //zoom = (float)Math.Round(zoom * 1000) / 1000;//2 decimals
             label1.Text = "Zoom: " + zoom.ToString();
 
             Zoom();
@@ -152,8 +153,8 @@ namespace OpenTKControlGrid
             //GL.Ortho(
             //    (mouseOnGrid.X - viewSize.X / 2) / zoom,
             //    (mouseOnGrid.X + viewSize.X / 2) / zoom,
-            //    (mouseOnGrid.Y - viewSize.Y / 2) / zoom,
             //    (mouseOnGrid.Y + viewSize.Y / 2) / zoom,
+            //    (mouseOnGrid.Y - viewSize.Y / 2) / zoom,
             //    -1, 1);
             GL.Translate(-mouseOnGrid.X, -mouseOnGrid.Y, 0);
             //GL.MatrixMode(MatrixMode.Modelview);
@@ -163,18 +164,20 @@ namespace OpenTKControlGrid
         //int testangle = 0;
         private void drawTestFunc()
         {
-            
             //test functions
+            GL.PushMatrix();
             Draw.setColor(Color.Blue);
             //Draw.FilledCircle(100, viewSize.X / 2, viewSize.Y / 2);
             //Draw.FillWedge(500, viewSize.X / 2, viewSize.Y / 2, 90, 360);
             //Draw.Arc(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
-            GL.PushMatrix();
-            //Draw.Rotate(testangle, new Vector3(0, 0, 1), viewSize.X / 2, viewSize.Y / 2);
-            Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
-                new Vector2(viewSize.X / 2 + dpi, viewSize.Y / 2 + dpi));
-            //Draw.FilledCircle(dpi / 2, 674.0f, 322.5f);
-            Draw.FilledCircle(dpi/10, mousePos.X + transx, -mousePos.Y + viewSize.Y - transy);
+                //Draw.Rotate(testangle, new Vector3(0, 0, 1), viewSize.X / 2, viewSize.Y / 2);
+                Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
+                    new Vector2(viewSize.X / 2 + dpi, viewSize.Y / 2 + dpi));
+                //Draw.FilledCircle(dpi / 2, 674.0f, 322.5f);
+                GL.PushMatrix();
+                    Draw.setColor(Color.Green);
+                    Draw.FilledCircle(dpi/10, (float)mousePos.X + transx, -(float)mousePos.Y + viewSize.Y - transy);
+                GL.PopMatrix();
             GL.PopMatrix();
         }
         private void drawAxes()
@@ -344,7 +347,7 @@ namespace OpenTKControlGrid
         #endregion
 
         #region Mouse
-        Point mousePos = new Point();
+        PointF mousePos = new PointF();
         PointF mouseOnGrid = new PointF();
         private void InitializeMouseEvents()
         {
@@ -367,6 +370,8 @@ namespace OpenTKControlGrid
             {
                 mousePos = e.Location;
             }
+            else if (e.Button == MouseButtons.Left)
+                mousePos = e.Location;
         }
 
         void glControl1_MouseMove(object sender, MouseEventArgs e)
@@ -374,24 +379,68 @@ namespace OpenTKControlGrid
             if(e.Button == MouseButtons.Middle || (e.Button == MouseButtons.Left && leftClickToMove))
             {
                 this.Cursor = Cursors.Hand;
-                transx -= (e.X - mousePos.X) * 2f;//set as a factor of 2 to move faster
-                transy -= (e.Y - mousePos.Y) * 2f;//set as a factor of 2 to move faster
-
-                mousePos = e.Location;
-                glControl1.Invalidate();
+                transx -= ((float)e.X - (float)mousePos.X) * 2f;//set as a factor of 2 to move faster
+                transy -= ((float)e.Y - (float)mousePos.Y) * 2f;//set as a factor of 2 to move faster
             }
-            //mouseOnGrid = new PointF(e.Location.X + transx, -e.Location.Y + viewSize.Y - transy);
-            mouseOnGrid = new PointF(mousePos.X + transx, -mousePos.Y + viewSize.Y - transy);
-            label3.Text = e.Location.ToString();
-            label4.Text = mouseOnGrid.ToString();
-        }
+            if (zoom!=1)
+            {
+                PointF diff = new PointF(mousePos.X - zoomPoint.X, mousePos.Y - zoomPoint.Y);
+                PointF normalized = new PointF(diff.X / dpi, diff.Y / dpi);
+                PointF ndpi = new PointF(normalized.X * (zoom - 1) / zoom, normalized.Y * (zoom - 1) / zoom);
+                //transx += (ndpi.X * dpi); transy -= (ndpi.Y * dpi);
+                PointF final = new PointF(mousePos.X - ndpi.X * dpi, mousePos.Y - ndpi.Y * dpi);
+                mousePos = new PointF(final.X, final.Y);
 
+                //mousePos = new PointF((e.Location.X) / zoom, (e.Location.Y) / zoom);
+
+                //this.Cursor = new Cursor(Cursor.Current.Handle);
+                //Cursor.Position = new Point((int)mousePos.X, (int)mousePos.Y);
+                //Control.MousePosition = new Point((int)mousePos.X, (int)mousePos.Y);
+            }
+            else
+                mousePos = e.Location;
+            //mousePos = new PointF((e.Location.X - zoomPoint.X) / zoom, (e.Location.Y - zoomPoint.Y) / zoom);
+
+
+            //mousePos = new Point((int)(e.Location.X / zoom), (int)(e.Location.Y / zoom));
+            //mouseOnGrid = new PointF(e.Location.X + transx, -e.Location.Y + viewSize.Y - transy);
+            //mouseOnGrid = new PointF(mousePos.X + transx, -mousePos.Y + viewSize.Y - transy);
+            
+            label3.Text = mousePos.ToString();
+            //var mouse = OpenTK.Input.Mouse.GetState();
+            //label3.Text = mouse.X.ToString() + "," + mouse.Y.ToString();
+            label4.Text = mouseOnGrid.ToString();
+            glControl1.Invalidate();
+        }
+        PointF zoomPoint = new PointF();
         void glControl1_MouseWheel(object sender, MouseEventArgs e)
         {
             const int WHEEL_DELTA = 120;//windows default 120 units per line scroll
+
+
+            if (zoom != 1)
+            {
+                //MessageBox.Show("Different Point");
+                PointF diff = new PointF(mousePos.X - zoomPoint.X, mousePos.Y - zoomPoint.Y);
+                PointF normalized = new PointF(diff.X / dpi, diff.Y / dpi);
+                PointF ndpi = new PointF(normalized.X * (zoom - 1) / zoom, normalized.Y * (zoom - 1) / zoom);
+                //transx += (ndpi.X * dpi); transy -= (ndpi.Y * dpi);
+                PointF final = new PointF(mousePos.X - ndpi.X * dpi, mousePos.Y - ndpi.Y * dpi);
+                mousePos = new PointF(final.X, final.Y);
+
+                //mousePos = new PointF((e.Location.X) / zoom, (e.Location.Y) / zoom);
+            }
+            mouseOnGrid = new PointF((int)(mousePos.X + transx), (int)(-mousePos.Y + viewSize.Y - transy));
+
+
+
             zoom += e.Delta / WHEEL_DELTA * dzoom;
             if (zoom < dzoom)
                 zoom = dzoom;
+            zoom = (float)Math.Round(zoom * 1000) / 1000;//2 decimals
+            
+
+            zoomPoint = e.Location;
             glControl1.Invalidate();
         }
 
