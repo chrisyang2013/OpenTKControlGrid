@@ -60,6 +60,7 @@ namespace OpenTKControlGrid
         private void InitializeMyGLControl()
         {
             glControl1.Size = new Size((int)viewSize.X, (int)viewSize.Y);
+            //glControl1.Size = this.Size;
         }
         private void setupViewPort()
         {
@@ -79,11 +80,17 @@ namespace OpenTKControlGrid
 
         #region Draw
         //Initialize settings to center the grid
-        float zoom = 0.575f;
-        float dzoom = .025f;
-        float transx = -380;
-        float transy = 750;
+        //float zoom = 0.575f;
+        //float dzoom = .025f;
+        //float transx = -380;
+        //float transy = 750;
         //float z = 0;
+
+        float zoom = 1;
+        float dzoom = .025f;
+        float transx = 0;
+        float transy = 0;
+
         Vector2 gridBottomLeft;
         Vector2 gridUpperRight;
         private void glControl1_Paint(object sender, PaintEventArgs e)
@@ -104,21 +111,18 @@ namespace OpenTKControlGrid
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
-            //background
-            //GL.ClearColor(Color.Black);
-
             //depth
-            GL.Enable(EnableCap.DepthTest);
+            //GL.Enable(EnableCap.DepthTest);
 
             //zoom
-            label1.Text = "";
-            //label1.Text = "Zoom: " + zoom.ToString();
-            GL.Scale(zoom, zoom, 1);
+            //label1.Text = "";
+            label1.Text = "Zoom: " + zoom.ToString();
 
+            Zoom();
 
             //pan
-            //label2.Text = "transx: " + transx + ", transy: " + transy;
-            label2.Text = "";
+            label2.Text = "transx: " + transx + ", transy: " + transy;
+            //label2.Text = "";
             GL.Translate(-transx, transy, 0);
 
             //set viewport again
@@ -139,7 +143,24 @@ namespace OpenTKControlGrid
             glControl1.SwapBuffers();
         }
 
-        int testangle = 0;
+        private void Zoom()
+        {
+            //GL.MatrixMode(MatrixMode.Projection);
+            //GL.LoadIdentity();
+            GL.Translate(mouseOnGrid.X, mouseOnGrid.Y, 0);
+            GL.Scale(zoom, zoom, 1);
+            //GL.Ortho(
+            //    (mouseOnGrid.X - viewSize.X / 2) / zoom,
+            //    (mouseOnGrid.X + viewSize.X / 2) / zoom,
+            //    (mouseOnGrid.Y - viewSize.Y / 2) / zoom,
+            //    (mouseOnGrid.Y + viewSize.Y / 2) / zoom,
+            //    -1, 1);
+            GL.Translate(-mouseOnGrid.X, -mouseOnGrid.Y, 0);
+            //GL.MatrixMode(MatrixMode.Modelview);
+            //GL.LoadIdentity();
+        }
+
+        //int testangle = 0;
         private void drawTestFunc()
         {
             
@@ -148,11 +169,13 @@ namespace OpenTKControlGrid
             //Draw.FilledCircle(100, viewSize.X / 2, viewSize.Y / 2);
             //Draw.FillWedge(500, viewSize.X / 2, viewSize.Y / 2, 90, 360);
             //Draw.Arc(100, viewSize.X / 2, viewSize.Y / 2, 90, 270);
-            //GL.PushMatrix();
+            GL.PushMatrix();
             //Draw.Rotate(testangle, new Vector3(0, 0, 1), viewSize.X / 2, viewSize.Y / 2);
-            //Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
-            //    new Vector2(viewSize.X / 2 + 100, viewSize.Y / 2 + 100));
-            //GL.PopMatrix();
+            Draw.FilledRectangle2(new Vector2(viewSize.X / 2, viewSize.Y / 2),
+                new Vector2(viewSize.X / 2 + dpi, viewSize.Y / 2 + dpi));
+            //Draw.FilledCircle(dpi / 2, 674.0f, 322.5f);
+            Draw.FilledCircle(dpi/10, mousePos.X + transx, -mousePos.Y + viewSize.Y - transy);
+            GL.PopMatrix();
         }
         private void drawAxes()
         {
@@ -322,6 +345,7 @@ namespace OpenTKControlGrid
 
         #region Mouse
         Point mousePos = new Point();
+        PointF mouseOnGrid = new PointF();
         private void InitializeMouseEvents()
         {
             glControl1.MouseWheel += glControl1_MouseWheel;
@@ -356,8 +380,10 @@ namespace OpenTKControlGrid
                 mousePos = e.Location;
                 glControl1.Invalidate();
             }
-            //label3.Text = e.Location.ToString();
-            label3.Text = "";
+            //mouseOnGrid = new PointF(e.Location.X + transx, -e.Location.Y + viewSize.Y - transy);
+            mouseOnGrid = new PointF(mousePos.X + transx, -mousePos.Y + viewSize.Y - transy);
+            label3.Text = e.Location.ToString();
+            label4.Text = mouseOnGrid.ToString();
         }
 
         void glControl1_MouseWheel(object sender, MouseEventArgs e)
@@ -506,9 +532,17 @@ namespace OpenTKControlGrid
         }
         private void resetToDefaultScale()
         {
-            zoom = 0.575f;
-            transx = -380;
-            transy = 750;
+            //zoom = 0.575f;
+            //transx = -380;
+            //transy = 750;
+            //hScrollBar1.Value = 50;
+            //vScrollBar1.Value = 50;
+            //glControl1.Invalidate();
+            //glControl1.Focus();
+
+            zoom = 1f;
+            transx = 0;
+            transy = 0;
             hScrollBar1.Value = 50;
             vScrollBar1.Value = 50;
             glControl1.Invalidate();

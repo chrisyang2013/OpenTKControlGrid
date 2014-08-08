@@ -35,9 +35,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.PrintToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PrintToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.axisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pageOutlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.zoomInTool = new System.Windows.Forms.ToolStripButton();
             this.zoomOutTool = new System.Windows.Forms.ToolStripButton();
@@ -45,11 +50,7 @@
             this.handTool = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.gridToolComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.axisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pageOutlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label4 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -114,13 +115,6 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // PrintToolStripMenuItem
-            // 
-            this.PrintToolStripMenuItem.Name = "PrintToolStripMenuItem";
-            this.PrintToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
-            this.PrintToolStripMenuItem.Text = "Print";
-            this.PrintToolStripMenuItem.Click += new System.EventHandler(this.PrintToolStripMenuItem_Click);
-            // 
             // saveImageToolStripMenuItem
             // 
             this.saveImageToolStripMenuItem.Name = "saveImageToolStripMenuItem";
@@ -128,12 +122,54 @@
             this.saveImageToolStripMenuItem.Text = "Save";
             this.saveImageToolStripMenuItem.Click += new System.EventHandler(this.saveImageToolStripMenuItem_Click);
             // 
+            // PrintToolStripMenuItem
+            // 
+            this.PrintToolStripMenuItem.Name = "PrintToolStripMenuItem";
+            this.PrintToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
+            this.PrintToolStripMenuItem.Text = "Print";
+            this.PrintToolStripMenuItem.Click += new System.EventHandler(this.PrintToolStripMenuItem_Click);
+            // 
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
             this.exitToolStripMenuItem1.Size = new System.Drawing.Size(99, 22);
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewportToolStripMenuItem,
+            this.axisToolStripMenuItem,
+            this.pageOutlineToolStripMenuItem,
+            this.gridToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // viewportToolStripMenuItem
+            // 
+            this.viewportToolStripMenuItem.Name = "viewportToolStripMenuItem";
+            this.viewportToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.viewportToolStripMenuItem.Text = "Viewport";
+            // 
+            // axisToolStripMenuItem
+            // 
+            this.axisToolStripMenuItem.Name = "axisToolStripMenuItem";
+            this.axisToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.axisToolStripMenuItem.Text = "Axes";
+            // 
+            // pageOutlineToolStripMenuItem
+            // 
+            this.pageOutlineToolStripMenuItem.Name = "pageOutlineToolStripMenuItem";
+            this.pageOutlineToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.pageOutlineToolStripMenuItem.Text = "Page Outline";
+            // 
+            // gridToolStripMenuItem
+            // 
+            this.gridToolStripMenuItem.Name = "gridToolStripMenuItem";
+            this.gridToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.gridToolStripMenuItem.Text = "Grid";
             // 
             // toolStrip1
             // 
@@ -210,46 +246,21 @@
             this.gridToolComboBox.ToolTipText = "Select Grid";
             this.gridToolComboBox.SelectedIndexChanged += new System.EventHandler(this.gridToolComboBox_SelectedIndexChanged);
             // 
-            // viewToolStripMenuItem
+            // label4
             // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewportToolStripMenuItem,
-            this.axisToolStripMenuItem,
-            this.pageOutlineToolStripMenuItem,
-            this.gridToolStripMenuItem});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.viewToolStripMenuItem.Text = "View";
-            // 
-            // viewportToolStripMenuItem
-            // 
-            this.viewportToolStripMenuItem.Name = "viewportToolStripMenuItem";
-            this.viewportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.viewportToolStripMenuItem.Text = "Viewport";
-            // 
-            // axisToolStripMenuItem
-            // 
-            this.axisToolStripMenuItem.Name = "axisToolStripMenuItem";
-            this.axisToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.axisToolStripMenuItem.Text = "Axes";
-            // 
-            // pageOutlineToolStripMenuItem
-            // 
-            this.pageOutlineToolStripMenuItem.Name = "pageOutlineToolStripMenuItem";
-            this.pageOutlineToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.pageOutlineToolStripMenuItem.Text = "Page Outline";
-            // 
-            // gridToolStripMenuItem
-            // 
-            this.gridToolStripMenuItem.Name = "gridToolStripMenuItem";
-            this.gridToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.gridToolStripMenuItem.Text = "Grid";
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(38, 246);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(35, 13);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "label4";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1306, 602);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -294,6 +305,7 @@
         private System.Windows.Forms.ToolStripMenuItem axisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pageOutlineToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gridToolStripMenuItem;
+        private System.Windows.Forms.Label label4;
     }
 }
 
